@@ -90,6 +90,51 @@ public class MemberDAO {
 		return isLogin;
 	}
 	
+	public MemberDTO getOneMemberInfo(String id) {
+		MemberDTO mdto = null;
+		try {
+			conn = getConnection();
+			pstmt = conn.prepareStatement("SELECT * FROM MEMBER WHERE ID=?");
+			pstmt.setString(1, id);
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				mdto = new MemberDTO();
+				mdto.setId(id);
+				mdto.setPw(rs.getString("pw"));
+				mdto.setName(rs.getString("name"));
+				mdto.setTel(rs.getString("tel"));
+				mdto.setEmail(rs.getString("email"));
+				mdto.setField(rs.getString("field"));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if(rs != null) {try {rs.close();} catch (SQLException e) {e.printStackTrace();}}
+			if(pstmt != null) {try {pstmt.close();} catch (SQLException e) {e.printStackTrace();}}
+			if(conn != null) {try {conn.close();} catch (SQLException e) {e.printStackTrace();}}
+		}
+		return mdto;
+	}
+	
+	public void apply(String id, String field, String skill, String major) {
+		try {
+			conn = getConnection();
+			pstmt = conn.prepareStatement("UPDATE MEMBER SET FIELD=? , SKILL=? , MAJOR=? WHERE ID=?");
+			pstmt.setString(1, field);
+			pstmt.setString(2, skill);
+			pstmt.setString(3, major);
+			pstmt.setString(4, id);
+			pstmt.executeUpdate();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if(rs != null) {try {rs.close();} catch (SQLException e) {e.printStackTrace();}}
+			if(pstmt != null) {try {pstmt.close();} catch (SQLException e) {e.printStackTrace();}}
+			if(conn != null) {try {conn.close();} catch (SQLException e) {e.printStackTrace();}}
+		}
+	}
 }
 
 
